@@ -1,0 +1,10 @@
+fastapi
+gunicorn
+uvicorn
+pandas
+jupyter
+pandas-profiling
+seaborn 
+matplotlib
+pyspark
+AutoViz
