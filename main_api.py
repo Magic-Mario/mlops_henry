@@ -13,7 +13,7 @@ app = FastAPI()
 # * Traer datasets necesarios
 
 df = pd.read_parquet(r"datasets/movie_dataset.parquet")
-short_df = pd.read_parquet("datasets/short_df.parquet")
+short_df = pd.read_parquet(r"datasets/short_df.parquet")
 
 with open("model/similarity_matrix.pickle", "rb") as f:
     model = pickle.load(f)
@@ -106,3 +106,6 @@ def votos_titulo(titulo: str):
 
 
 
+@app.get('/get_actor/{nombre_actor}', status_code=status.HTTP_200_OK)
+def get_actor(nombre_actor: str):
+    pass 
