@@ -1,0 +1,5 @@
+services:
+  - name: movie_api
+    type: web
+    startCommand: ./start.sh
+
