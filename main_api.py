@@ -1,6 +1,4 @@
 from fastapi import FastAPI, status
-from fastapi.responses import Response, JSONResponse
-from fastapi.exceptions import HTTPException
 import pandas as pd
 import numpy as np
 import pickle
@@ -228,3 +226,34 @@ def get_director(nombre_director):
 
     # Devolver los resultados
     return {"nombre_director": nombre_director, "exito": exito, "peliculas": peliculas}
+
+
+@app.get("/recomendacion/{titulo}", status_code=status.HTTP_200_OK)
+def recomendacion(titulo: str):
+    """
+    Obtiene recomendaciones de películas similares basadas en el título de una película dada.
+
+    Parámetros:
+    - titulo (str): El título de la película.
+
+    Retorna:
+    - List[str]: Una lista de títulos de películas recomendadas similares.
+    """
+    # Buscar la fila correspondiente al título de la película
+    idx = short_df.index[short_df["title"].str.lower() == titulo.lower()].tolist()
+    if len(idx) == 0:
+        return "Película no encontrada"
+    else:
+        idx = idx[0]
+
+    # Calcular la similitud de la película con todas las demás películas
+    sim_scores = list(enumerate(model[idx]))
+
+    # Ordenar las películas según su similitud y seleccionar las 5 más similares
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:6]
+
+    # Obtener los índices de las películas recomendadas
+    movie_indices = [i[0] for i in sim_scores]
+
+    # Devolver los títulos de las películas recomendadas
+    return list(short_df["title"].iloc[movie_indices])
