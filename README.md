@@ -1,9 +1,9 @@
 
 # LAB01: MLOps
 
-Este repositorio corresponde al primer proyecto individual con la tematica de MLOps Engineer; el proyecto consiste en tomar 4 datasets de diferentes plataformas de streaming y crear un MVP (Minimum Viable Product). El repositorio consistente en:
+Este repositorio corresponde al primer proyecto individual con la tematica de MLOps Engineer; el proyecto consiste en tomar 2 datasets correspondientes a creaciones cinematograficas y crear un MVP (Minimum Viable Product). El repositorio consistente en:
 
-- API con 6 diferentes endpoints
+- API con 7 diferentes endpoints
 - EDA notebook
 - Deployment
 
@@ -11,129 +11,118 @@ Este repositorio corresponde al primer proyecto individual con la tematica de ML
 
 **API:** FASTAPI, Uvicorn
 
-**EDA:** Pandas, Numpy, Matplotlib, Seaborn, AutoViz
+**EDA:** Pandas, Numpy, Matplotlib, Seaborn
 
 **Deployment:** Render
 
 ## Arquitectura de proyecto
 
 ```
---> api/
-    - app.py
-
---> cleaning/
-    - main_cleaning.py
-    - EDA.ipynb
-
 --> datasets/
-    - amazon_prime_titles.parquet
-    - hulu_titles.parquet
-    - rating_total.parquet
-    - disney_plus_titles.parquet
-    - netflix_titles.parquet
+    - credits.parquet
+    - merged_df.parquet
+    - movies_dataset.parquet
+    - short_df.parquet
 
-- .gitattributes
+--> model/
+    - similarity_matrix.pickle
+
+--> notebooks/
+    - ex_da_an.ipynb
+    - recommendation_model.ipynb
+    - transformation.ipynb
+
 - .gitignore
+- .start.sh.swp
+- main_api.py
 - requirements.txt
 ```
 
 ## API Reference
 
-#### get_max_duration
+#### cantidad_filmaciones_mes
 
 ```http
-  GET /{platform}/get_max_duration?year={year}&duration_type={duration_type}
+  GET /cantidad_filmaciones_mes/{mes}
 ```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `platform` | `string` | **Required**. La plataforma de streaming deseada. |
-| `year` | `int` | **Required**. El año de lanzamiento deseado de la película. |
-| `duration_type` | `string` | **Required**. El tipo de duración deseada, solo puede ser 'min'. |
+| `mes` | `str` | **Required**. Nombre del mes en español. |
 
-*Obtiene la película con la duración máxima para un año y plataforma específicos.*
+*Obtiene la cantidad de filmaciones de películas en un mes específico.*
 
-#### get_score_count
+#### cantidad_filmaciones_dia
 
 ```http
-  GET /{platform}/get_score_count?scored={scored}&year={year}
+  GET /cantidad_filmaciones_dia/{dia}
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `platform` | `string` | **Required**. La plataforma de streaming deseada. |
-| `year` | `int` | **Required**. Año a considerar para el conteo de películas. |
-| `scored` | `float` | **Required**. Puntaje mínimo para filtrar las películas |
+| `dia` | `string` | **Required**. Nombre del día de la semana en inglés. |
 
-*Cantidad de películas (sólo películas, no series, ni documentales, etc) según plataforma, con un puntaje mayor a XX en determinado año.*
+- Obtiene la cantidad de filmaciones de películas en un día específico.*
 
-### get_count_platform
+### score_titulo
 
 ```http
-  GET /{platform}/get_count_platform
+  GET /score_titulo/{titulo}
 ```
 
 | Parameter  | Type      | Description                                         |
 | :--------- | :--------| :---------------------------------------------------|
-| `platform` | `string` | **Obligatorio**. La plataforma de streaming deseada.    |
-| `year`     | `int`    | **Obligatorio**. Año a considerar para el conteo de películas. |
-| `scored`   | `float`  | **Obligatorio**. Puntaje mínimo para filtrar las películas. |
+| `titulo` | `string` | **Obligatorio**. Título de la película a consultar.|
 
-*Obtiene el número total de películas disponibles en una plataforma de streaming.*
+*Obtiene el puntaje de popularidad de una película específica.*
+
+### voto_titulo
+
+```http
+  GET /voto_titulo/{titulo}
+```
+
+| Parámetro | Tipo   | Descripción                                         |
+| :------- | :----- | :---------------------------------------------------|
+| `titulo` | `str` | **Obligatorio**. Título de la película a consultar. |
+
+*Obtiene información sobre el número de votos y el promedio de votos de una película específica.*
 
 ### get_actor
 
 ```http
-  GET /{platform}/get_actor?year={year}
+  GET /get_actor/{nombre_actor}
 ```
 
 | Parámetro | Tipo   | Descripción                                         |
 | :------- | :----- | :---------------------------------------------------|
-| `platform` | `str` | **Obligatorio**. El nombre de la plataforma a buscar. |
-| `year`     | `int` | **Obligatorio**. El año de lanzamiento a buscar.      |
+| `nombre_actor` | `str` | **Obligatorio**.Nombre del actor a consultar.|
 
-*Devuelve el actor más común en una plataforma y año dado.*
+*Obtiene información sobre un actor específico, incluyendo el número de películas en las que ha participado, el retorno total obtenido y el promedio de retorno.*
 
-### prod_per_country
+### get_director
 
 ```http
-  GET /{platform}/prod_per_country?tipo={tipo}&pais={pais}&anio={anio}
+    GET /get_director/{nombre_director}
 ```
 
 | Parámetro | Tipo   | Descripción                                         |
 | :------- | :----- | :---------------------------------------------------|
-| `platform` | `str` | **Obligatorio**. El nombre de la plataforma a buscar.|
-| `tipo`| `str` | **Obligatorio**.  El tipo de producción a buscar|
-| `pais`| `str` | **Obligatorio**.  El país de origen a buscar|
-| `anio`| `int` | **Obligatorio**. El año de lanzamiento a buscar|
+| `nombre_director` | `str` | **Obligatorio**. Nombre del director a consultar.|
 
-*Retorna la cantidad de producciones de un determinado tipo en un país y año específicos.*
+*Obtiene información sobre un director específico, incluyendo su éxito promedio y detalles de sus películas.*
 
-### get_contents
+### recomendacion
 
 ```http
-    GET /{platform}/get_contents?rating={rating}
+    GET /recomendacion/{titulo}
 ```
 
 | Parámetro | Tipo   | Descripción                                         |
 | :------- | :----- | :---------------------------------------------------|
-| `platform` | `str` | **Obligatorio**. El nombre de la plataforma a buscar.|
-| `rating`| `str` | **Obligatorio**.  Valor del rating de audiencia a filtrar (p.ej. "g", "pg", "r", etc.).|
+| `titulo` | `str` | **Obligatorio**.  El título de la película.|
 
-*Retorna la cantidad total de contenidos/productos (todo lo disponible en streaming, series, películas, etc) según el rating de audiencia dado (para que público fue clasificada la pelicula).*
-
-### predict
-
-```http
-    GET /{platform}/predict/{user_id}
-```
-
-| Parámetro | Tipo   | Descripción                                         |
-| :------- | :----- | :---------------------------------------------------|
-| `platform` | `str` | **Obligatorio**. El nombre de la plataforma a buscar.|
-| `user_id`| `int` | **Obligatorio**.  El ID del usuario para el que se quieren hacer las recomendaciones.|
-
-*Devuelve una lista con los títulos de las 5 películas más recomendadas para el usuario especificado.*
+*Obtiene recomendaciones de películas similares basadas en el título de una película dada.*
 
 ## Ejecutar API
 
@@ -142,27 +131,25 @@ Ejecutar el script de las APIs.
 **Windows**
 
 ```bash
-  python api/app.py
+  python api_main.py
 ```
 
 **MacOS y Linux**
 
 ```bash
-python3 api/app.py
+python3 api_main.py
 ```
 
 El servidor local de `uvicorn` es activado automaticamente al momento de ejecutar el script.
 
 ## EDA: Análisis Exploratorio de Datos
 
-Con el análisis exploratorio de datos se busca encontrar todos esos Outliers o errores dentro de los diferentes Datasets dispuesto para resolver este proyecto; para esto fue dispuesto el archivo `cleaning/EDA.ipynb` donde se desarrollo este ejercicio de análisis y busqueda de datos.
-
+Con el análisis exploratorio de datos se busca encontrar todos esos Outliers o errores dentro de los diferentes Datasets dispuesto para resolver este proyecto; para esto fue dispuesto el archivo `notebooks/ex_da_an.ipynb` donde se desarrollo este ejercicio de análisis y busqueda de datos.
 
 ## Deployment
 
-No fue posible realizar el despliegue de la plataforma debido a la escasez de recursos de las plataformas y al alto consumo de recursos del presente proyecto. Sin embargo, el proyecto demostrará su funcionamiento en el video. 
+El deployment fue realizado en la plataforma de Render y esta disponible para recibir consultas en el siguiente [link](https://magicmlops01.onrender.com/)
 
+## Video
 
-## Video 
-
-Link al video [aquí](https://www.youtube.com/watch?v=s0DsIfrSd90).
+Link al video [aquí]().

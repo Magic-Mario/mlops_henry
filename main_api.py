@@ -66,7 +66,7 @@ def cantidad_filmaciones_dia(dia: str):
     Obtiene la cantidad de filmaciones de películas en un día específico.
 
     Args:
-        dia (str): Nombre del día de la semana en español.
+        dia (str): Nombre del día de la semana en inglés.
 
     Returns:
         dict: Diccionario con el nombre del día y la cantidad de filmaciones de películas en ese día, o 0 si el nombre del día no es válido.
@@ -75,15 +75,15 @@ def cantidad_filmaciones_dia(dia: str):
     weekdays = {
         "Monday": "lunes",
         "Tuesday": "martes",
-        "Wednesday": "miercoles",
+        "Wednesday": "miércoles",
         "Thursday": "jueves",
         "Friday": "viernes",
-        "Saturday": "sabado",
+        "Saturday": "sábado",
         "Sunday": "domingo",
     }
 
     # Verificar si el nombre del día proporcionado es válido
-    if dia.lower() not in weekdays.values():
+    if dia.title() not in weekdays:
         return {"dia": dia, "cantidad": 0}
 
     # Convertir la columna "release_date" a tipo datetime
@@ -93,38 +93,10 @@ def cantidad_filmaciones_dia(dia: str):
     df["weekday"] = df["release_date"].dt.day_name(locale="es_ES").str.lower()
 
     # Filtrar las filas por el día de la semana proporcionado
-    week_day = df[df["weekday"] == dia.lower()]
+    week_day = df[df["weekday"] == weekdays[dia.title()]]
 
-    return {"dia": dia, "cantidad": len(week_day)}
+    return {"dia": weekdays[dia.title()], "cantidad": len(week_day)}
 
-
-@app.get("/score_titulo/{titulo}", status_code=status.HTTP_200_OK)
-def score_titulo(titulo: str):
-    """
-    Obtiene el puntaje de popularidad de una película específica.
-
-    Args:
-        titulo (str): Título de la película a consultar.
-
-    Returns:
-        dict: Diccionario con el puntaje de popularidad de la película o un mensaje de error si no se encuentra la película.
-    """
-    # Filtrar las películas por título
-    score_df = df[df["title"] == titulo].copy()
-
-    # Verificar si la película fue encontrada
-    if len(score_df) == 0:
-        return {"message": "Película no encontrada"}
-
-    # Obtener la información de la primera película encontrada (asumiendo títulos únicos)
-    movie = score_df.iloc[0]
-
-    # Construir la respuesta con la información del puntaje de popularidad de la película
-    response = f"La película {movie['title']}"
-    response += f" fue estrenada en el año {movie['release_year']}"
-    response += f" con un score de {movie['popularity']}"
-
-    return {"message": response}
 
 
 @app.get("/voto_titulo/{titulo}", status_code=status.HTTP_200_OK)
@@ -171,7 +143,7 @@ def get_actor(nombre_actor: str):
     Returns:
         str: Cadena de texto con la información del actor y sus películas.
     """
-        # Filtrar las filas que contengan al actor en la lista de actores
+    # Filtrar las filas que contengan al actor en la lista de actores
     actor_rows = merged_df[merged_df["cast"].apply(lambda cast: nombre_actor in cast)]
 
     num_pelis = len(actor_rows)
@@ -182,7 +154,6 @@ def get_actor(nombre_actor: str):
     response += f" Su retorno total es de {retorno_total} con un promedio de retorno de {retorno_promedio}."
 
     return response
-
 
 
 @app.get("/get_director/{nombre_director}", status_code=status.HTTP_200_OK)
