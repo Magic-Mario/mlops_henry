@@ -66,7 +66,7 @@ def cantidad_filmaciones_dia(dia: str):
     Obtiene la cantidad de filmaciones de películas en un día específico.
 
     Args:
-        dia (str): Nombre del día de la semana en inglés.
+        dia (str): Nombre del día de la semana en español.
 
     Returns:
         dict: Diccionario con el nombre del día y la cantidad de filmaciones de películas en ese día, o 0 si el nombre del día no es válido.
@@ -95,31 +95,6 @@ def cantidad_filmaciones_dia(dia: str):
         return {'dia': dia, 'cantidad': 0}
     cantidad = len(df[df['day_of_week'] == dia.lower()])
     return {'dia': dia, 'cantidad': cantidad}
-    # # Diccionario de días de la semana en inglés y español
-    # weekdays = {
-    #     "Monday": "lunes",
-    #     "Tuesday": "martes",
-    #     "Wednesday": "miércoles",
-    #     "Thursday": "jueves",
-    #     "Friday": "viernes",
-    #     "Saturday": "sábado",
-    #     "Sunday": "domingo",
-    # }
-
-    # # Verificar si el nombre del día proporcionado es válido
-    # if dia.title() not in weekdays:
-    #     return {"dia": dia, "cantidad": 0}
-
-    # # Convertir la columna "release_date" a tipo datetime
-    # df["release_date"] = pd.to_datetime(df["release_date"])
-
-    # # Agregar una columna "weekday" con el nombre del día de la semana en español
-    # df["weekday"] = df["release_date"].dt.day_name(locale="es_ES").str.lower()
-
-    # # Filtrar las filas por el día de la semana proporcionado
-    # week_day = df[df["weekday"] == weekdays[dia.title()]]
-
-    # return {"dia": weekdays[dia.title()], "cantidad": len(week_day)}
 
 
 
