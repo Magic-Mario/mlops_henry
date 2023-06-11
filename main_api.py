@@ -75,10 +75,10 @@ def cantidad_filmaciones_dia(dia: str):
     weekdays = {
         "Monday": "lunes",
         "Tuesday": "martes",
-        "Wednesday": "miércoles",
+        "Wednesday": "miercoles",
         "Thursday": "jueves",
         "Friday": "viernes",
-        "Saturday": "sábado",
+        "Saturday": "sabado",
         "Sunday": "domingo",
     }
 
@@ -171,21 +171,18 @@ def get_actor(nombre_actor: str):
     Returns:
         str: Cadena de texto con la información del actor y sus películas.
     """
-    try:
         # Filtrar las filas que contengan al actor en la lista de actores
-        actor_rows = df[df["cast"].apply(lambda cast: nombre_actor in cast)]
+    actor_rows = merged_df[merged_df["cast"].apply(lambda cast: nombre_actor in cast)]
 
-        num_pelis = len(actor_rows)
-        retorno_total = actor_rows["return"].sum()
-        retorno_promedio = actor_rows["return"].mean()
+    num_pelis = len(actor_rows)
+    retorno_total = actor_rows["return"].sum()
+    retorno_promedio = actor_rows["return"].mean()
 
-        response = f"El actor {nombre_actor} ha participado en {num_pelis} películas."
-        response += f" Su retorno total es de {retorno_total} con un promedio de retorno de {retorno_promedio}."
+    response = f"El actor {nombre_actor} ha participado en {num_pelis} películas."
+    response += f" Su retorno total es de {retorno_total} con un promedio de retorno de {retorno_promedio}."
 
-        return response
+    return response
 
-    except Exception as e:
-        return f"Error: {str(e)}"
 
 
 @app.get("/get_director/{nombre_director}", status_code=status.HTTP_200_OK)
