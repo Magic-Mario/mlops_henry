@@ -71,31 +71,55 @@ def cantidad_filmaciones_dia(dia: str):
     Returns:
         dict: Diccionario con el nombre del día y la cantidad de filmaciones de películas en ese día, o 0 si el nombre del día no es válido.
     """
-    # Diccionario de días de la semana en inglés y español
-    weekdays = {
-        "Monday": "lunes",
-        "Tuesday": "martes",
-        "Wednesday": "miércoles",
-        "Thursday": "jueves",
-        "Friday": "viernes",
-        "Saturday": "sábado",
-        "Sunday": "domingo",
+    
+    #Creamos la columna 'day_of_week'
+    # Obtener el día de la semana como un entero
+    day_of_week_int = df['release_date'].dt.dayofweek
+
+    # Asignar el número de día de la semana con su respectivo string
+    day_of_week_dict = {
+        0: 'lunes',
+        1: 'martes',
+        2: 'miercoles',
+        3: 'jueves',
+        4: 'viernes',
+        5: 'sabado',
+        6: 'domingo'
     }
 
-    # Verificar si el nombre del día proporcionado es válido
-    if dia.title() not in weekdays:
-        return {"dia": dia, "cantidad": 0}
+    # Utilizar el diccionario para obtener el string correspondiente al día de la semana
+    df['day_of_week'] = day_of_week_int.map(day_of_week_dict)
 
-    # Convertir la columna "release_date" a tipo datetime
-    df["release_date"] = pd.to_datetime(df["release_date"])
+    dias_semana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo']
+    if dia.lower() not in dias_semana:
+        return {'dia': dia, 'cantidad': 0}
+    cantidad = len(df[df['day_of_week'] == dia.lower()])
+    return {'dia': dia, 'cantidad': cantidad}
+    # # Diccionario de días de la semana en inglés y español
+    # weekdays = {
+    #     "Monday": "lunes",
+    #     "Tuesday": "martes",
+    #     "Wednesday": "miércoles",
+    #     "Thursday": "jueves",
+    #     "Friday": "viernes",
+    #     "Saturday": "sábado",
+    #     "Sunday": "domingo",
+    # }
 
-    # Agregar una columna "weekday" con el nombre del día de la semana en español
-    df["weekday"] = df["release_date"].dt.day_name(locale="es_ES").str.lower()
+    # # Verificar si el nombre del día proporcionado es válido
+    # if dia.title() not in weekdays:
+    #     return {"dia": dia, "cantidad": 0}
 
-    # Filtrar las filas por el día de la semana proporcionado
-    week_day = df[df["weekday"] == weekdays[dia.title()]]
+    # # Convertir la columna "release_date" a tipo datetime
+    # df["release_date"] = pd.to_datetime(df["release_date"])
 
-    return {"dia": weekdays[dia.title()], "cantidad": len(week_day)}
+    # # Agregar una columna "weekday" con el nombre del día de la semana en español
+    # df["weekday"] = df["release_date"].dt.day_name(locale="es_ES").str.lower()
+
+    # # Filtrar las filas por el día de la semana proporcionado
+    # week_day = df[df["weekday"] == weekdays[dia.title()]]
+
+    # return {"dia": weekdays[dia.title()], "cantidad": len(week_day)}
 
 
 
