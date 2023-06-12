@@ -22,6 +22,16 @@ with open("model/similarity_matrix.pickle", "rb") as f:
 # * API's
 
 
+@app.get('/')
+def inicio():
+    return '''
+    <h1>API de Mario Medina Hernandez</h1>
+    <p>Para más información, visite el repositorio en GitHub:</p>
+    <a href="https://github.com/Magic-Mario/mlops_henry/">Repositorio en GitHub</a>
+    '''
+
+
+
 @app.get("/cantidad_filmaciones_mes/{mes}", status_code=status.HTTP_200_OK)
 def cantidad_filmaciones_mes(mes: str):
     """

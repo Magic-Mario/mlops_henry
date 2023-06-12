@@ -124,24 +124,6 @@ Este repositorio corresponde al primer proyecto individual con la tematica de ML
 
 *Obtiene recomendaciones de películas similares basadas en el título de una película dada.*
 
-## Ejecutar API
-
-Ejecutar el script de las APIs.
-
-**Windows**
-
-```bash
-  python api_main.py
-```
-
-**MacOS y Linux**
-
-```bash
-python3 api_main.py
-```
-
-El servidor local de `uvicorn` es activado automaticamente al momento de ejecutar el script.
-
 ## EDA: Análisis Exploratorio de Datos
 
 Con el análisis exploratorio de datos se busca encontrar todos esos Outliers o errores dentro de los diferentes Datasets dispuesto para resolver este proyecto; para esto fue dispuesto el archivo `notebooks/ex_da_an.ipynb` donde se desarrollo este ejercicio de análisis y busqueda de datos.
