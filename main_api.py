@@ -109,6 +109,38 @@ def cantidad_filmaciones_dia(dia: str):
 
 
 
+@app.get('/score_titulo/{titulo}', status_code=status.HTTP_200_OK)
+def score_titulo(titulo: str):
+    """
+    Obtiene el score de popularidad de una película según su título.
+
+    Args:
+        titulo (str): Título de la película.
+
+    Returns:
+        dict: Diccionario que contiene el mensaje de respuesta.
+
+    """
+    # Filtrar el DataFrame por el título de la película
+    score_df = df[df['title'] == titulo].copy()
+
+    # Verificar si se encontró alguna película
+    if len(score_df) == 0:
+        return {"message": "Película no encontrada"}
+
+    # Obtener la primera película coincidente
+    movie = score_df.iloc[0]
+
+    # Construir el mensaje de respuesta
+    response = f"La película {movie['title']}"
+    response += f" fue estrenada en el año {movie['release_year']}"
+    response += f" con un score de {movie['popularity']}"
+
+    return {"message": response}
+
+
+
+
 @app.get("/voto_titulo/{titulo}", status_code=status.HTTP_200_OK)
 def votos_titulo(titulo: str):
     """
