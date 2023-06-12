@@ -134,4 +134,4 @@ El deployment fue realizado en la plataforma de Render y esta disponible para re
 
 ## Video
 
-Link al video [aquí]().
+Link al video [aquí](https://youtu.be/Q9Msywzx07Y).

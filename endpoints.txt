@@ -1,0 +1,7 @@
+https://magicmlops01.onrender.com/cantidad_filmaciones_mes/diciembre
+https://magicmlops01.onrender.com/cantidad_filmaciones_dia/miercoles
+https://magicmlops01.onrender.com/score_titulo/Despicable%20Me
+https://magicmlops01.onrender.com/voto_titulo/Toy%20Story%203
+https://magicmlops01.onrender.com/get_actor/Tom%20Hanks
+https://magicmlops01.onrender.com/get_director/Howard%20Deutch
+https://magicmlops01.onrender.com/recomendacion/Love
