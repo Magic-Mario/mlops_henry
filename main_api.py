@@ -1,4 +1,5 @@
 from fastapi import FastAPI, status
+from fastapi.responses import HTMLResponse
 import pandas as pd
 import numpy as np
 import pickle
@@ -22,7 +23,7 @@ with open("model/similarity_matrix.pickle", "rb") as f:
 # * API's
 
 
-@app.get('/')
+@app.get('/', response_class=HTMLResponse)
 def inicio():
     return '''
     <h1>API de Mario Medina Hernandez</h1>
